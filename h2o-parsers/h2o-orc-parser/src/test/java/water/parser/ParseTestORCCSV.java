@@ -7,9 +7,7 @@ import org.junit.Test;
 import water.Scope;
 import water.TestUtil;
 import water.fvec.Frame;
-import water.util.Log;
 
-import static java.lang.StrictMath.abs;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -30,8 +28,6 @@ public class ParseTestORCCSV extends TestUtil {
     private String[] orcFiles = {"smalldata/parser/orc/testTimeStamp.orc",
             "smalldata/parser/orc/TestOrcFile.testDate1900.orc",
             "smalldata/parser/orc/TestOrcFile.testDate2038.orc"};
-
-    private Boolean[] forceColumnTypes = {false, false, false, false, true, true, true};
 
     @BeforeClass
     static public void _preconditionJavaVersion() { // NOTE: the `_` force execution of this check after setup
@@ -55,30 +51,7 @@ public class ParseTestORCCSV extends TestUtil {
                 Scope.track(csv_frame);
                 Scope.track(orc_frame);
 
-                // make sure column types are the same especially the enums
-                byte[] csv_types = csv_frame.types();
-                byte[] orc_types = orc_frame.types();
-
-                for (int index = 0; index < csv_frame.numCols(); index++) {
-                    if ((csv_types[index] == 4) && (orc_types[index] == 2)) {
-                        orc_frame.replace(index, orc_frame.vec(index).toCategoricalVec().toNumericVec());
-                        csv_frame.replace(index, csv_frame.vec(index).toNumericVec());
-                    }
-                }
-
-                for (int col_index = 0; col_index < 2; col_index++) {
-                    for (int row_index = 0; row_index < orc_frame.numRows(); row_index++) {
-                        long orc = orc_frame.vec(col_index).at8(row_index);
-                        long csv = csv_frame.vec(col_index).at8(row_index);
-                        long diff = orc - csv;
-                        if (abs(diff) > 0) {
-                            Log.info("**orc csv ts differ at row " + row_index + " col " + col_index + " and the difference is "
-                                    + Long.toString(diff));
-                        }
-                    }
-                }
-
-                assertTrue(TestUtil.isBitIdentical(orc_frame, csv_frame));
+                assertTrue(TestUtil.isBitIdentical(orc_frame, csv_frame));  // both frames should equal
             }
         } finally {
             Scope.exit();
