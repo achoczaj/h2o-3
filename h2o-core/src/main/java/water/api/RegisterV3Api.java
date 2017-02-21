@@ -1,5 +1,6 @@
 package water.api;
 
+
 /**
  *
  */
@@ -427,5 +428,11 @@ public class RegisterV3Api extends AbstractRegister {
     RequestServer.registerEndpoint("rapids_help",
         "GET /99/Rapids/help", RapidsHandler.class, "genHelp",
         "Produce help for Rapids AstRoot language.");
+
+    RequestServer.registerEndpoint("correlationFrame",
+            "GET /3/CorrelationFrame/{frame_x_id}/{frame_y_id}/{use}", CorrelationHandler.class, "getCorrelationFrame",
+                    "Calculate the correlation matrix of a frame. " +
+                            "Will return a frame id corresponding to the correlation frame in the form of " +
+                            "`cor_{frame_x_id}_{frame_y_id}_{use}`");
   }
 }
