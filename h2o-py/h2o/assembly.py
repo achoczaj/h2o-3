@@ -14,8 +14,7 @@ class H2OAssembly(object):
     Extension class of Pipeline implementing additional methods:
 
       - to_pojo: Exports the assembly to a self-contained Java POJO used in a per-row, high-throughput environment.
-      - union: Combine two H2OAssembly objects, the resulting row from each H2OAssembly are joined with simple
-        concatenation.
+
     """
 
     # static properties pointing to H2OFrame methods
@@ -52,6 +51,14 @@ class H2OAssembly(object):
 
 
     def to_pojo(self, pojo_name="", path="", get_jar=True):
+        """
+        Convert the munging operations performed on H2OFrame into a POJO.
+
+        :param pojo_name (str): Name of POJO
+        :param path (str): path of POJO.
+        :param get_jar (bool): Whether to also download the h2o-genmodel.jar file needed to compile the POJO
+        :return: None
+        """
         if pojo_name == "": pojo_name = "AssemblyPOJO_" + str(uuid.uuid4())
         java = h2o.api("GET /99/Assembly.java/%s/%s" % (self.id, pojo_name))
         file_path = path + "/" + pojo_name + ".java"
@@ -80,7 +87,13 @@ class H2OAssembly(object):
     #     self.fuzed.append(i)
 
 
-    def fit(self, fr, **fit_params):
+    def fit(self, fr):
+        """
+        To perform the munging operations on a frame specified in steps on the frame fr.
+
+        :param fr: H2OFrame where munging operations are to be performed on.
+        :return: H2OFrame after munging operations are completed.
+        """
         res = []
         for step in self.steps:
             res.append(step[1].to_rest(step[0]))
