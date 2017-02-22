@@ -2883,12 +2883,12 @@ def factorial(n):
 
 def cumsum(n):
     """
-    Defined my own cumsum
+    Defined my own cumsum.  Will generate sum from 1 to n.
 
     :param n:
     :return:
     """
-    if n>=0 and n<2:
-        return n
-    if n>=2:
-        return n+cumsum(n-1)
+    if n>=0:
+        return n*(n+1)/2
+    else:
+        assert False, "n must be positive."
