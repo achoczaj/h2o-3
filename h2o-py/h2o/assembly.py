@@ -11,10 +11,43 @@ from h2o.utils.shared_utils import urlopen, quoted
 
 class H2OAssembly(object):
     """
-    Extension class of Pipeline implementing additional methods:
+    H2OAssembly class can be used to specify many frame operations in one place.
 
+    Sample usage:
+
+    >>> my_frame = h2o.import_file(pyunit_utils.locate("smalldata/iris/iris_wheader.csv"))  # some existing H2OFrame
+    >>> assembly = H2OAssembly(steps=[("col_select",      H2OColSelect(["sepal_len", "petal_len", "class"])),
+                                       ("cos_sep_len",     H2OColOp(op=H2OFrame.cos, col="sepal_len", inplace=True)),
+                                       ("str_cnt_species", H2OColOp(op=H2OFrame.countmatches, col="class", inplace=False, pattern="s"))])
+    >>> result = assembly.fit(fr)  # fit the assembly and perform the munging operations
+
+    In this example, we first load the iris frame.  Next, we would like to perform data munging on the iris frame
+    and do the following:
+    1). only select three columns out of the ive columns;
+    2). take the cosine of the column sepal_len and replace the original column with the cosine of the column;
+    3). want to count the number of rows with the letter s in the class column.  Note that inplace = False and a new
+        column is generated to hold the result.
+
+    Extension class of Pipeline implementing additional methods:
       - to_pojo: Exports the assembly to a self-contained Java POJO used in a per-row, high-throughput environment.
 
+    In addition, H2OAssembly provides a few static methods that perform element to element comparisons between
+    two frames. They all are called as
+
+    >>> H2OAssembly.op(frame1, frame2)
+
+    while frame1, frame2 are H2OFrame of the same size and same column types.  It will return a H2OFrame
+    containing the element-wise result of operation op.  The following operations are supported here:
+    - divide
+    - plus
+    - multiply
+    - minus
+    - ess_than
+    - less_than_equal
+    - equal_equal
+    - not_equal
+    - greater_than
+    - greater_than_equal
     """
 
     # static properties pointing to H2OFrame methods
