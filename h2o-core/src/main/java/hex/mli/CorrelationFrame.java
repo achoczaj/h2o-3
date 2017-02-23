@@ -12,6 +12,8 @@ public class CorrelationFrame extends Iced {
     private enum Mode {Everything, AllObs, CompleteObs}
 
     public static Frame correlationFrame(Frame frx, Frame fry, String use) {
+        if (frx.numRows() != fry.numRows())
+            throw new IllegalArgumentException("Frames must have the same number of rows, found " + frx.numRows() + " and " + fry.numRows());
         Mode mode;
         switch (use) {
             case "everything":
