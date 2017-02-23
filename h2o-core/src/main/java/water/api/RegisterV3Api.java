@@ -434,8 +434,11 @@ public class RegisterV3Api extends AbstractRegister {
                     "Calculate the correlation matrix of a frame. " +
                             "Will return a frame id corresponding to the correlation frame in the form of " +
                             "`cor_{frame_x_id}_{frame_y_id}_{use}`");
+
     RequestServer.registerEndpoint("correlationGraph",
-            "GET /3/CorrelationGraph/{cor_frame_id}", CorrGraphHandler.class, "getCorrelationGraph",
-            "Get the correlation graph of a correlation frame.");
+            "GET /3/CorrelationGraph/{cor_frame_id}/{col_idxs}/{threshold}", CorrGraphHandler.class, "getCorrelationGraph",
+            "Get the correlation graph of a correlation frame." +
+                    "Will return a correlation graph in the form of a edge/node list." +
+                    "Input should be correlation frame id,columns to filter by, and a correlation threshold. ");
   }
 }

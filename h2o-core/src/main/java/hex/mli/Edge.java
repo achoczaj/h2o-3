@@ -4,7 +4,6 @@ import water.Iced;
 
 public class Edge extends Iced<Edge> {
 
-
     private final int node_a;
     private final int node_b;
     private final double weight;
